@@ -19,6 +19,55 @@
 #set working directory
 setwd("~/Intro to Biocomputing/R/Biocomp-Exercise09")
 
+
+co_var_function <- function(directory_path, column, na_ignore){
+setwd(directory_path)
+file_names <- Sys.glob("./*.csv")
+na_ignore <- as.logical(na_ignore)
+
+#create an empty vector that is the length of the number of files (since we
+#will only be looking at the coefficent of variation in one specified column across all files)
+co_var <- numeric(length(list.files("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/")))
+st_dev <- numeric(length(list.files("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/")))
+mean <- numeric(length(list.files("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/")))
+
+input <- numeric(length =1)
+for(i in 1:length(co_var)){
+  data <- read.csv(file_names[i], header = T, sep = ",")
+  if(nrow(data[i]) < 50){
+    print(file_names[i])
+    print("Warning: there are less than 50 observations present in the above file. Type Yes to proceed with the analysis, hit any other key to exit.")
+    input <- readline()
+    if(input == "Yes"){
+      st_dev[i] <- sd(data[, column])
+      mean[i] <- mean(data[, column])
+      co_var[i] <- st_dev[i] / mean[i]
+    }else{
+      print("Analysis on this file was skipped")
+      st_dev[i] <- NA
+      mean[i] <- NA
+      co_var[i] <- NA
+    }
+  }else if(na_ignore==TRUE){
+    st_dev[i] <- sd(data[, column], na.rm = T)
+    mean[i] <- mean(data[, column], na.rm = T)
+    co_var[i] <- st_dev[i] / mean[i]
+  }else{
+    st_dev[i] <- sd(data[, column])
+    mean[i] <- mean(data[, column])
+    co_var[i] <- st_dev[i] / mean[i]
+  }
+}  
+print("Here is the final vector of the coefficient of variation for each file")
+return(co_var)  
+}  
+
+co_var_function(directory_path = "~/Intro to Biocomputing/R/Biocomp-Exercise09/test", column = 2, na_ignore = TRUE)
+
+##Trying to add the EC
+#For an extra credit point, add arguments and associated code to your function 
+#to situations where a file doesn't have the correct number of columns or the 
+#provided data includes NA's 
 file_names <- Sys.glob("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/*.csv")
 
 #create an empty vector that is the length of the number of files (since we
@@ -42,91 +91,26 @@ for(i in 1:length(co_var)){
     }else{
       print("Analysis on this file was skipped")
     }
-  }else{
+  }else if(ncol(data) < ARGUMENT){
+      print(file_name[i])
+      print("This file was skipped because it does not have the appropriate number of columns")
+  }else if(na_ignore (ARGUMENT) == "TRUE"){
+    st_dev[i] <- sd(data[,2], na.rm = T)
+    mean[i] <- mean(data[,2], na.rm = T)
+    co_var[i] <- st_dev[i] / mean[i]
+  } else{
     st_dev[i] <- sd(data[,2])
     mean[i] <- mean(data[,2])
     co_var[i] <- st_dev[i] / mean[i]
   }
 }  
 print(co_var)  
-    
 
 
 
 
 
 
-    print("Warning: there are less than 50 observations present in $FILENAME. Type Y to proceed with the analysis, hit any other key to exit.")
-    if(readline() = "Y"){
-      st_dev[i] <- sd(data[,2])
-      mean[i] <- mean(data[,2])
-      co_var[i] <- st_dev[i] / mean[i]
-    }else{
-      print("Exiting...")
-      break
-    }
-  }else{
-    st_dev[i] <- sd(data[,2])
-    mean[i] <- mean(data[,2])
-    co_var[i] <- st_dev[i] / mean[i]
-}
-}
-
-
-
-
-
-
-for(i in 1:length(co_var)){
-  data <- read.csv(file_names[i], header = T, sep = ",")
-  st_dev[i] <- sd(data[,2])
-  mean[i] <- mean(data[,2])
-  co_var[i] <- st_dev[i] / mean[i]
-}
-
-print(co_var)
-
-if(nrow(data[i] < 50)){
-  print("Warning: there are less than 50 observations present in $FILENAME. Type Y to proceed with the analysis, hit any other key to exit.")
-  if(readline() = "Y"){
-    CODEEEE
-  }else{
-    print("Exiting...")
-    break
-  }#end of mini if else
-}else{
-  CODE
-}
-#end of if else
-
-
-#####
-#attempt
-file_names <- Sys.glob("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/*.csv")
-file_names <- list()
-
-for(i in file_names){
-  file_names[i] <- read.csv(file, header =T, sep = ",")
-}
-
-for(file_name in file_names){
-  for(i in 1:ncol(file_name))
-  st_dev <- sd(file_name[,i])
-  return(st_dev)
-}
-
-
-#attempt
-
-file_names <- Sys.glob("./test/*.csv")
-
-for(file_name in file_names){
-  #read original data
-  sample <- read.csv(file_name, header = T, sep = ",")
-  
-  #create new data (sd and mean) based on contents of original file
-  st_dev <- data.frame(file = file_name, st_dev = sd(sample$))
-}
 
 
 #attempt
@@ -167,3 +151,25 @@ write.table(x = df2, file = "df2.csv", sep = ",", col.names = T)
 df2 <- read.csv("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/df2.csv", header = T)
 #head
 head(df2)
+
+df3 = data.frame(Name = c(1:100), 
+                 Grade_score=c(1:100),
+                 Mathematics1_score=c(101:200),
+                 Science_score=c(101:200))
+df3
+write.table(x = df3, file = "df3.csv", sep = ",", col.names = T)
+#load in data
+df3 <- read.csv("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/df3.csv", header = T)
+#head
+head(df3)
+
+df4 = data.frame(Name = c(1:99, NA), 
+                 Grade_score=c(NA, 2:100),
+                 Mathematics1_score=c(101:199, NA),
+                 Science_score=c(101:200))
+df4
+write.table(x = df4, file = "df4.csv", sep = ",", col.names = T)
+#load in data
+df4 <- read.csv("~/Intro to Biocomputing/R/Biocomp-Exercise09/test/df4.csv", header = T)
+#head
+head(df4)
